@@ -18,6 +18,13 @@ AMARILLO: #E4B455
     font-family: 'Raleway', sans-serif;
 }
 
+/*button*/
+button {
+    background-color: #b4000f;
+    border-color: #b4000f;
+    color: #FCFBE2;
+    border-radius: 25px;
+}
 /**
 HEADER
 **/
@@ -38,10 +45,19 @@ header nav{
 
 .btn-success {
     background-color:#BF404D;
-    border-color: #BF404D;
+    border-color: #F7AD45;
 }
 
-
+.pizza-orden {
+    background-image: url(../assets/pizza.png);
+    width: 85px;
+    height: 85px;
+    background-size: contain;
+    background-color: #b4000f;
+    background-repeat: no-repeat;
+    border-color: #F7AD45;
+    border-radius: 5px;
+}
 /***
 MAIN
 ***/
@@ -137,12 +153,7 @@ h1 {
     color: #FCFBE2;
 }
 
-button {
-    background-color: #b4000f;
-    border-radius: 20px;
-    border-color: #b4000f;
-    color: #FCFBE2;
-}
+
 
 
 .paso1, .paso2, .paso3, .paso4, .paso5, .paso6 {
@@ -244,12 +255,48 @@ button {
 
 .ticket{
     background-color: #FCFBE2;
-    width: 50%;
+    width: 80%;
     height: auto;
+    display: flex;
+}
+
+.checktotal {
+    display: flex;
+    margin-top: 10px;
 }
 
 .ticket > *{
     color: black;
+    font-size: 24px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.ticket h2 {
+    font-size: 35px;
+    font-weight: 600;
+    color: #b4000f;
+}
+
+.ticket button {
+    width: 130px;
+    font-size: 25px;
+    height: 35px;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.ticket h3 {
+    display: flex;
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.ticket h5 {
+    font-size: 20px;
+    color: #BF404D;
+    line-height: 30px;
 }
 
 .confirmar-orden {
@@ -278,6 +325,9 @@ p.nombre, h5.precio {
     display: flex;
 }
 
-h5.total {
-    font-size: 24px;
+.checktotal h3 {
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-size: 35px;
 }
+
