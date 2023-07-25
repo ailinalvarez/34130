@@ -1,309 +1,145 @@
-class orderedPizza {
-    constructor(orderNumber, details, price) {
-        this.orderNumber = orderNumber,
-        this.details = details,
-        this.price = price
+const orderButton = document.querySelector(".order");
+
+function orderPizza () {
+    alert("Bienvenido a crea tu propia pizza")
+    let nombre = "";
+    let email;
+    while (nombre == "") {
+        nombre = prompt("Nos gustaria saber tu nombre") 
     }
-}
-
-/*********** PIZZA TAMANIO ************/
-
-const individual = document.querySelector(".individual");
-const mediano = document.querySelector(".mediano");
-const familiar = document.querySelector(".familiar");
-
-function pizza (tamanioSeleccionado) {
-    //If we select a size then the ingredient buttons should be clickable again.
-    if(document.querySelector(".salsa").disabled == true) {
-        enableIngredients();
-    }
-    const seleccionados = document.querySelector(".seleccionados");
-
-    //If we change size then clear the order
-    while (seleccionados.firstChild) {
-        seleccionados.removeChild(seleccionados.lastChild);
-    }
-
-    let tamanioTitulo = document.querySelector(".tamanioTitulo")
-
-    //If the size was not selected before this, add the size and price to the carrito. Otherwise just change the size and price.
-    if (tamanioTitulo == null) {
-        const tamanio = document.createElement("h3");
-        tamanio.className = "tamanioTitulo"
-        const tamanioSelect = document.createTextNode(tamanioSeleccionado);
-
-        tamanio.appendChild(tamanioSelect);
-        seleccionados.appendChild(tamanio);
+    alert("Bienvenido " + nombre)
+    let desear = confirm("Deseas ordenar una pizza " + nombre + "?")
+    if (desear) {
+        let emailDomain = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        while (true) {
+            email = prompt("Para poder comunicarnos contigo más tarde necesitamos saber tu casilla de correo")
+            if (emailDomain.test(email)) {
+                break;
+            } else {
+                alert("Debes ingresar un correo electrónico válido")
+            }
+        }
     } else {
-        tamanioTitulo.innerHTML = tamanioSeleccionado
+        return alert("Será la próxima!")
     }
-    if (tamanioSeleccionado === "Individual") {
-        for(index in ingredienteObjectoArray) {
-            ingredienteObjectoArray[index].individual()
-        }
-        document.querySelector(".total").innerHTML = 300
-    } else if (tamanioSeleccionado === "Mediana") {
-        for(index in ingredienteObjectoArray) {
-            ingredienteObjectoArray[index].medianana()
-        }
-        document.querySelector(".total").innerHTML = 400
+    let pTamanio = tamanio()
+    let toppingSeleccionado = crearPizza(pTamanio.tamanioP, nombre)
+    let precioTotal = total(pTamanio.precio, toppingSeleccionado)
+    let ordenTotal = "Esto es tu orden:\n" + pTamanio.tamanioP + "\n"
+    for (const index in toppingSeleccionado) {
+        ordenTotal += toppingSeleccionado[index].nombre + "\n"
+    }
+    ordenTotal += "\n Tu precio total es: $" + precioTotal + ". Quieres confirmar?"
+    let orden = confirm(ordenTotal)
+    if (orden) {
+        alert( nombre + " tu orden ha sido recibida! Nos comunicaremos contigo a tu email " + email +" para proseguir con el pedido. Muchas gracias por tu pedido, esperamos que lo disfrutes !!")
     } else {
-        for(index in ingredienteObjectoArray) {
-            ingredienteObjectoArray[index].grande()
+        alert("Te esperamos la próxima!")
+    }
+}
+
+function tamanio () {
+    let ordenartamanio
+    let pizzaTamanio
+
+    alert("Empecemos, primero debes el tamaño de la pizza: individual (4 porciones, $200), mediana (8 porciones, $350) o grande (12 porciones, $500)")
+    do {
+        pizzaTamanio = prompt("Dinos cuál deseas ordernar: individual, mediana o grande?")
+        pizzaTamanio.toLowerCase()
+        if (pizzaTamanio != "individual" && pizzaTamanio != "mediana" && pizzaTamanio != "grande") {
+            alert("Necesitas escribir individual, mediana o grande")
+            continue
         }
-        document.querySelector(".total").innerHTML = 500
+        ordenartamanio = confirm("Has ordenado " + pizzaTamanio + ". Es correcto?")
+    } while (!ordenartamanio)
+
+    if (pizzaTamanio == "individual") {
+        return {tamanioP: pizzaTamanio , precio: 200 }
+    } else if (pizzaTamanio == "mediana" ){
+        return {tamanioP: pizzaTamanio , precio: 350 }
+    } else {
+        return {tamanioP: pizzaTamanio , precio: 500 }
     }
 }
 
+function topping (nombre, precio) {
+    this.nombre = nombre;
+    this.precio = precio;
+    this.medianana = function() {
+        this.precio = parseInt(this.precio*1.2)
+    }
+    this.grande = function() {
+        this.precio = parseInt(this.precio*1.4)
+}
+}
 
-individual.addEventListener("click", function() {pizza("Individual")});
-mediano.addEventListener("click", function() {pizza("Mediana")});
-familiar.addEventListener("click", function() {pizza("Familiar")});
+const muzza = new topping("muzzarella", 200)
+const jamon = new topping("jamon", 320)
+const champi = new topping("champiñones", 250)
+const anana = new topping("anana", 280)
+const cebolla = new topping("cebolla", 150)
+const tomate = new topping("tomate", 200)
+const peperoni = new topping("peperoni", 420)
 
-/********** INGREDIENTES **********/
-
-class topping {
-    constructor(nombre, precio) {
-        this.nombre = nombre;
-        this.originalPrecio = precio;
-        this.precio = precio;
-        this.individual = function () {
-            this.precio = parseInt(this.originalPrecio);
+function crearPizza (tamanio, nombre) {
+    let listaToppings = [muzza, jamon, champi, anana, cebolla, tomate, peperoni];
+    
+    if (tamanio == "mediana") {
+        for (const index in listaToppings) {
+            listaToppings[index].medianana();
         }
-        this.medianana = function () {
-            this.precio = parseInt(this.originalPrecio * 1.2);
-        };
-        this.grande = function () {
-            this.precio = parseInt(this.originalPrecio * 1.4);
-        };
-    }
-};
-
-
-const sTomate = new topping("Salsa de Tomate", 100)
-const sPicante = new topping("Salsa Picante", 100)
-const aTruffa = new topping ("Aceite de Truffa", 150)
-const aOliva = new topping ("Aceite de Oliva", 120)
-const qMuzza = new topping("Muzzarella", 200)
-const qAzul = new topping ("Queso Azul", 250)
-const qPecorino = new topping ("Pecorino", 275)
-const qCheddar = new topping ("Cheddar", 220)
-const oVerdes = new topping ("Olivas Verdes", 100)
-const oNegras = new topping ("Olivas Negras", 100)
-const champig = new topping("Champiñones", 200)
-const pina = new topping("Anana", 180)
-const cebo = new topping("Cebolla", 150)
-const morronRosti = new topping ("Pimiento Rostizado", 150)
-const tomateDis = new topping ("Tomates Disecados", 200)
-const tomateChe = new topping("Tomate Cherry", 150)
-const fPepperoni = new topping("Peperoni", 250)
-const fJamon = new topping("Jamon", 200)
-const fSalami = new topping ("Salami", 250)
-const fPanceta = new topping ("Panceta", 250)
-
-const ingredienteObjectoArray = [sTomate, sPicante, aTruffa, aOliva, qMuzza, qAzul, qPecorino, qCheddar, oVerdes, oNegras, champig, pina, cebo, morronRosti, tomateDis, tomateChe, fPepperoni, fJamon, fSalami, fPanceta] 
-
-const salsa = document.querySelector(".salsa");
-const picante = document.querySelector(".picante");
-const truffa = document.querySelector(".truffa");
-const oliva = document.querySelector(".oliva");
-const muzza = document.querySelector(".muzza");
-const azul = document.querySelector(".azul");
-const pecorino = document.querySelector(".pecorino");
-const cheddar = document.querySelector(".cheddar");
-const olivasV = document.querySelector(".verde");
-const olivasN = document.querySelector(".negra");
-const champi = document.querySelector(".champi");
-const anana = document.querySelector(".anana");
-const cebolla = document.querySelector(".cebolla");
-const morron = document.querySelector(".morron");
-const tomateSeco = document.querySelector(".tomate-seco");
-const cherry = document.querySelector(".cherry");
-const pepperoni = document.querySelector(".pepperoni");
-const salami = document.querySelector(".salami");
-const jamon = document.querySelector(".jamon");
-const panceta = document.querySelector(".panceta");
-
-//Adds ingredients to the order
-function ingredientesSeleccionados(ingredienteObjecto) {
-    const div = document.createElement("div")
-    const idName = ingredienteObjecto.nombre.replaceAll(" ", "")
-
-    //If the ingrediente is not yet in the order then add the name, the price, update the total and add a remove button to that ingredient in the carrito
-    if (document.getElementById(idName) == null) {
-        div.id = idName
-        const ingredienteNombre = document.createElement("p");
-        ingredienteNombre.className = "nombre"
-        const ingredientePrecio = document.createElement("h5");
-        ingredientePrecio.className = "precio"
-        const removeButton = document.createElement("button")
-        const ingSelectPrecio = document.createTextNode(`$ ${ingredienteObjecto.precio}`);
-        const ingSelectNombre = document.createTextNode(ingredienteObjecto.nombre);
-        const ingSeleccionados = document.querySelector(".seleccionados");
-        
-        //Gives the button the ability to remove the div with the ingredient
-        removeButton.addEventListener("click", function () {
-            let removeThis = document.getElementById(idName)
-            removeItem(removeThis, ingredienteObjecto.precio)
-        })
-        ingredientePrecio.appendChild(ingSelectPrecio);
-        ingredienteNombre.appendChild(ingSelectNombre);
-        div.appendChild(ingredienteNombre);
-        div.appendChild(ingredientePrecio);
-        div.appendChild(removeButton);
-        ingSeleccionados.appendChild(div);
-
-        updateTotal(ingredienteObjecto.precio)
-    }
-}
-
-//Removes the ingredient from the carrito and updates the total
-function removeItem (item, precio) {
-    updateTotal((-precio))
-    item.remove()
-}
-
-//Adds the cost of a size or ingredient to the total price
-function updateTotal (precio) {
-    document.querySelector(".total").innerHTML = parseInt(document.querySelector(".total").innerHTML) + precio
-}
-
-salsa.addEventListener("click", function() {
-    ingredientesSeleccionados(sTomate)
-});
-picante.addEventListener("click", function() {
-    ingredientesSeleccionados(sPicante)
-});
-truffa.addEventListener("click", function() {
-    ingredientesSeleccionados(aTruffa)
-});
-oliva.addEventListener("click", function() {
-    ingredientesSeleccionados(aOliva)
-});
-muzza.addEventListener("click", function() {
-    ingredientesSeleccionados(qMuzza)
-});
-azul.addEventListener("click", function() {
-    ingredientesSeleccionados(qAzul)
-});
-pecorino.addEventListener("click", function() {
-    ingredientesSeleccionados(qPecorino)
-});
-cheddar.addEventListener("click", function() {
-    ingredientesSeleccionados(qCheddar)
-});
-olivasV.addEventListener("click", function() {
-    ingredientesSeleccionados(oVerdes)
-});
-olivasN.addEventListener("click", function() {
-    ingredientesSeleccionados(oNegras)
-});
-champi.addEventListener("click", function() {
-    ingredientesSeleccionados(champig)
-});
-anana.addEventListener("click", function() {
-    ingredientesSeleccionados(pina)
-});
-cebolla.addEventListener("click", function() {
-    ingredientesSeleccionados(cebo)
-});
-morron.addEventListener("click", function() {
-    ingredientesSeleccionados(morronRosti)
-});
-tomateSeco.addEventListener("click", function() {
-    ingredientesSeleccionados(tomateDis)
-});
-cherry.addEventListener("click", function() {
-    ingredientesSeleccionados(tomateChe)
-});
-pepperoni.addEventListener("click", function() {
-    ingredientesSeleccionados(fPepperoni)
-});
-salami.addEventListener("click", function() {
-    ingredientesSeleccionados(fSalami)
-});
-jamon.addEventListener("click", function() {
-    ingredientesSeleccionados(fJamon)
-});
-panceta.addEventListener("click", function() {
-    ingredientesSeleccionados(fPanceta)
-});
-
-function disableIngredients() {
-    const array = []
-    const base = document.getElementsByClassName("base")
-    const queso = document.getElementsByClassName("queso-btn")
-    const oliva = document.getElementsByClassName("oliva")
-    const veg = document.getElementsByClassName("veg")
-    const fiambre = document.getElementsByClassName("fiambre")
-    //const aniadirPizza = document.querySelector("#addToCart")
-
-    array.push(base, queso, oliva, veg, fiambre)
-
-    //Goes through each ingredient button and disables them
-    //ve cada boton del array y  los inactiva
-    for(index in array) {
-        let temp = array[index]
-        for(item in temp) {
-            temp[item].disabled = true
+    } else if (tamanio == "grande") {
+        for (const index in listaToppings) {
+            listaToppings[index].grande();
+        }
+    } 
+    alert("Ahora veras la lista de toppings que puedes agregar a tu pizza");
+    let loop  = true
+    while (loop) {
+        let lista = ""
+        let seleccionados = []
+        for (const index in listaToppings ) {
+            lista += (listaToppings[index].nombre + " $" + listaToppings[index].precio + "\n")
+        }
+        let mostrarlista = prompt(lista + "\nDinos cuales son los ingredientes que deseas agregar a tu pizza. Es importante que separes cada ingrediente con una  ' , '. Por ejemplo: anana, cebolla, tomate")
+        let mostrarToppings= mostrarlista.split(",")
+        for (const index in mostrarToppings) {
+            const nombreTopping = mostrarToppings[index].trim()
+            const encontrarTopping = listaToppings.find(producto => producto.nombre === nombreTopping);
+    
+            if (encontrarTopping) {
+                seleccionados.push(eval(nombreTopping))
+            }
+        }
+    
+        let mostrarSeleccion = ""
+        for (const index in seleccionados) {
+            mostrarSeleccion += (seleccionados[index].nombre + ", ")
+        }
+        let confirmar = confirm("Los toppings que seleccionaste son: \n\n" + mostrarSeleccion + " deseas confirmar?")
+        if (confirmar) {
+            loop = false
+            return seleccionados
+        } else {
+            let continuarOrden = confirm( nombre +" deseas volver a seleccionar sus toppings?")
+            if (continuarOrden) {
+                continue;
+            } else {
+                alert("Será la próxima !")
+                loop = false
+                break;
+            }
         }
     }
+}   
+
+function total (pizza, toppings) {
+    let precio = pizza 
+    for (const index in toppings){
+        precio += toppings[index].precio
+    }
+    return precio 
 }
 
-function enableIngredients() {
-    const array = []
-    const base = document.getElementsByClassName("base")
-    const queso = document.getElementsByClassName("queso-btn")
-    const oliva = document.getElementsByClassName("oliva")
-    const veg = document.getElementsByClassName("veg")
-    const fiambre = document.getElementsByClassName("fiambre")
-    //const aniadirPizza = document.querySelector("#addToCart")
 
-    array.push(base, queso, oliva, veg, fiambre)
-
-    //Goes through each ingredient button and enables them
-    for(index in array) {
-        let temp = array[index]
-        for(item in temp) {
-            temp[item].disabled = false
-        }
-    }
-}
-
-disableIngredients()
-
-const aniadirPizza = document.querySelector("#addToCart")
-aniadirPizza.addEventListener("click", function() {
-    aniadirACarrito()
-})
-
-let counter = 1
-const pizzasArray = []
-function aniadirACarrito() {
-    //Create an object of the order to save
-    const detailsArray = []
-    const ingredientesNombre = document.querySelectorAll(".nombre")
-    detailsArray.push(document.querySelector(".tamanioTitulo").innerHTML)
-    for(index in ingredientesNombre) {
-        if(ingredientesNombre[index].innerHTML == null) {
-            continue;
-        }
-        detailsArray.push(ingredientesNombre[index].innerHTML)
-    }
-    const precioPizza = parseInt(document.querySelector(".total").innerHTML)
-    const order = new orderedPizza(counter, detailsArray, precioPizza)
-    pizzasArray.push(order)
-
-    //Save the object order to local storage
-    window.localStorage.setItem("PizzaOrder", JSON.stringify(pizzasArray))
-    counter++
-
-    //Clear the order from the cart
-    const seleccionados = document.querySelector(".seleccionados");
-    while (seleccionados.firstChild) {
-        seleccionados.removeChild(seleccionados.lastChild);
-    }
-    document.querySelector(".total").innerHTML = 0
-
-    disableIngredients();
-}
+orderButton.addEventListener("click", orderPizza)
