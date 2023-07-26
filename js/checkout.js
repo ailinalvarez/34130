@@ -48,7 +48,8 @@ removeButtons.forEach((button, index) => {
 const totalPriceAmt = document.querySelector(".totalPriceAmt")
 function removePizza(pizzaID) {
     const pizza = document.getElementById(pizzaID);
-    const price = pizza.querySelector(".pizzaPrice").innerHTML;
-    totalPriceAmt.innerHTML = parseInt(totalPriceAmt.innerHTML) - parseInt(price)
+    const price = pizza.querySelector(".pizzaPrice").innerHTML.split(" ");
+    const pricePizza = price[price.length-1];
+    totalPriceAmt.innerHTML = parseInt(totalPriceAmt.innerHTML) - parseInt(pricePizza);
     pizza.remove()
 }
