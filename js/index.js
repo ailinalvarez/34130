@@ -133,7 +133,7 @@ function ingredientesSeleccionados(ingredienteObjecto) {
     if (document.getElementById(idName) == null) {
         div.id = idName
         const ingredienteNombre = document.createElement("p");
-        ingredienteNombre.className = "nombre"
+        ingredienteNombre.className = "nombre es"
         const ingredientePrecio = document.createElement("h5");
         ingredientePrecio.className = "precio"
         const removeButton = document.createElement("button")
@@ -298,6 +298,19 @@ function aniadirACarrito() {
     window.localStorage.setItem("PizzaOrder", JSON.stringify(pizzasArray))
     counter++
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    })
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Pizza sumada a tu orden'
+    })
+
     //Clear the order from the cart
     const seleccionados = document.querySelector(".seleccionados");
     while (seleccionados.firstChild) {
@@ -307,3 +320,49 @@ function aniadirACarrito() {
 
     disableIngredients();
 }
+
+
+async function translate(string) {
+    const url = 'https://text-translator2.p.rapidapi.com/translate';
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'X-RapidAPI-Key': '8bd30e9787msh145d139260e9733p1259c2jsn7f57315ba0ec',
+            'X-RapidAPI-Host': 'text-translator2.p.rapidapi.com'
+        },
+        body: new URLSearchParams({
+            source_language: 'es',
+            target_language: 'en',
+            text: string
+        })
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        return result.data.translatedText;
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+function translateElements() {
+    const elements = document.querySelectorAll('.es'); 
+    
+    elements.forEach(async element => {
+        const originalText = element.innerHTML;
+        
+        try {
+            const translatedText = await translate(originalText);
+            element.innerHTML = translatedText;
+        } catch (error) {
+            console.error(error);
+        }
+    });
+}
+
+const transladoBtn = document.querySelector(".translate")
+const text = document.querySelectorAll(".es")
+transladoBtn.addEventListener('click', translateElements);
