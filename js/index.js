@@ -327,7 +327,7 @@ async function translate(string) {
         method: 'POST',
         headers: {
             'content-type': 'application/x-www-form-urlencoded',
-            'X-RapidAPI-Key': '8bd30e9787msh145d139260e9733p1259c2jsn7f57315ba0ec',
+            'X-RapidAPI-Key': '', //APIKEY ACA
             'X-RapidAPI-Host': 'text-translator2.p.rapidapi.com'
         },
         body: new URLSearchParams({
