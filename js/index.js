@@ -240,7 +240,6 @@ function disableIngredients() {
 
     array.push(base, queso, oliva, veg, fiambre)
 
-    //Goes through each ingredient button and disables them
     //ve cada boton del array y  los inactiva
     for(index in array) {
         let temp = array[index]
